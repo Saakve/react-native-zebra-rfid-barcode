@@ -86,6 +86,7 @@ public class RFIDReaderInterface implements RfidEventsListener {
         // set start and stop triggers
         reader.Config.setStartTrigger(triggerInfo.StartTrigger);
         reader.Config.setStopTrigger(triggerInfo.StopTrigger);
+        reader.Events.setReaderDisconnectEvent(true);
       } catch (InvalidUsageException | OperationFailureException e) {
         e.printStackTrace();
       }
@@ -140,6 +141,14 @@ public class RFIDReaderInterface implements RfidEventsListener {
             return null;
           }
         }.execute();
+      }
+    }
+    if (rfidStatusEvents.StatusEventData.getStatusEventType() == STATUS_EVENT_TYPE.DISCONNECTION_EVENT) {
+      try {
+        reader.disconnect();
+        listener.onLostConnection(readerDevice.getName());
+      } catch (InvalidUsageException | OperationFailureException e) {
+        e.printStackTrace();
       }
     }
   }

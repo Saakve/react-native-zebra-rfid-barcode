@@ -38,4 +38,5 @@ export enum ZebraEvent {
   ON_DEVICE_CONNECTED = 'onZebraConnected',
   ON_RFID = 'onZebraRFIDReaded',
   ON_BARCODE = 'onZebraBarcodeScanned',
+  ON_LOST_CONNECTION = "onZebraDisconnection",
 }

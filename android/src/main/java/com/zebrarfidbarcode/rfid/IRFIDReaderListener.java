@@ -4,4 +4,5 @@ import java.util.ArrayList;
 
 public interface IRFIDReaderListener {
     void onRFIDRead(ArrayList<String> listRfid);
+    void onLostConnection(String readerName);
 }
