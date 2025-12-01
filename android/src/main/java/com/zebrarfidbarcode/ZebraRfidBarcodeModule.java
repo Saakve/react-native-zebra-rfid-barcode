@@ -94,7 +94,6 @@ public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implement
     sendEvent(getReactApplicationContext(), ON_DEVICE_CONNECTED, params);
   }
 
-  @ReactMethod
   public void sendRFID(ArrayList<String> listRfid) {
     WritableMap params = Arguments.createMap();
 
