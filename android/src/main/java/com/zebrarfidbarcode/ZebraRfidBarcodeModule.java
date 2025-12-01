@@ -41,7 +41,6 @@ public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implement
     if (scannerInterface == null) {
       scannerInterface = new BarcodeScannerInterface(this);
     }
-    availableScannerList = scannerInterface.getAvailableScanners(getReactApplicationContext());
   }
 
   private void configureScanner(int scannerID, String scannerName) {
@@ -63,6 +62,7 @@ public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implement
   public void getAllDevices(Promise promise) {
     try {
       WritableArray listDevices = Arguments.createArray();
+      availableScannerList = scannerInterface.getAvailableScanners(getReactApplicationContext());
       for (DCSScannerInfo scannerInfo : availableScannerList) {
         listDevices.pushString(scannerInfo.getScannerName());
       }
