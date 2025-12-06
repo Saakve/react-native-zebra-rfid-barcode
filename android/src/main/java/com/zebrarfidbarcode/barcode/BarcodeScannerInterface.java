@@ -21,23 +21,22 @@ public class BarcodeScannerInterface implements IDcsSdkApiDelegate {
 
     public ArrayList<DCSScannerInfo> getAvailableScanners(Context context) {
         if (sdkHandler == null) {
-            sdkHandler = new SDKHandler(context);
+          sdkHandler = new SDKHandler(context);
+          sdkHandler.dcssdkSetOperationalMode(DCSSDKDefs.DCSSDK_MODE.DCSSDK_OPMODE_BT_NORMAL);
+          sdkHandler.dcssdkSetOperationalMode(DCSSDKDefs.DCSSDK_MODE.DCSSDK_OPMODE_USB_CDC);
+
+          sdkHandler.dcssdkSetDelegate(this);
+          int notificationsMask = 0;
+          notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SCANNER_APPEARANCE.value;
+          notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SCANNER_DISAPPEARANCE.value;
+          notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SESSION_ESTABLISHMENT.value;
+          notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SESSION_TERMINATION.value;
+          notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_BARCODE.value;
+
+          // Subscribe to events set in notification mask
+          sdkHandler.dcssdkSubsribeForEvents(notificationsMask);
+          sdkHandler.dcssdkEnableAvailableScannersDetection(true);
         }
-
-        sdkHandler.dcssdkSetOperationalMode(DCSSDKDefs.DCSSDK_MODE.DCSSDK_OPMODE_BT_NORMAL);
-        sdkHandler.dcssdkSetOperationalMode(DCSSDKDefs.DCSSDK_MODE.DCSSDK_OPMODE_USB_CDC);
-
-        sdkHandler.dcssdkSetDelegate(this);
-        int notificationsMask = 0;
-        notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SCANNER_APPEARANCE.value;
-        notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SCANNER_DISAPPEARANCE.value;
-        notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SESSION_ESTABLISHMENT.value;
-        notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_SESSION_TERMINATION.value;
-        notificationsMask |= DCSSDKDefs.DCSSDK_EVENT.DCSSDK_EVENT_BARCODE.value;
-
-        // Subscribe to events set in notification mask
-        sdkHandler.dcssdkSubsribeForEvents(notificationsMask);
-        sdkHandler.dcssdkEnableAvailableScannersDetection(true);
 
         scannerInfoList.clear();
         sdkHandler.dcssdkGetAvailableScannersList(scannerInfoList);
@@ -68,6 +67,10 @@ public class BarcodeScannerInterface implements IDcsSdkApiDelegate {
     public void onDestroy() {
         try {
             if (sdkHandler != null) {
+                sdkHandler.dcssdkEnableAvailableScannersDetection(false);
+                sdkHandler.dcssdkUnsubsribeForEvents(~0);
+                sdkHandler.dcssdkClose();
+                sdkHandler.dcssdkSetDelegate(null);
                 sdkHandler = null;
             }
         } catch (Exception e) {
