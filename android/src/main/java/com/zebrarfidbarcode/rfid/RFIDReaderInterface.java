@@ -172,10 +172,17 @@ public class RFIDReaderInterface implements RfidEventsListener {
 
   public void onDestroy() {
     try {
-      reader.Events.removeEventsListener(this);
-      reader.disconnect();
-      reader.Dispose();
-      readers.Dispose();
+      if (reader != null) {
+        reader.Events.removeEventsListener(this);
+        reader.disconnect();
+        reader.Dispose();
+        reader = null;
+      }
+
+      if (readers != null) {
+        readers.Dispose();
+        readers = null;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
