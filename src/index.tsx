@@ -25,6 +25,14 @@ export const connectToDevice = (deviceName: string) => {
   return ZebraRfidBarcode.connectToDevice(deviceName);
 };
 
+export const disconnectFromDevice = () => {
+  return ZebraRfidBarcode.disconnectFromDevice();
+};
+
+export const releaseResources = () => {
+  return ZebraRfidBarcode.releaseResources();
+};
+
 export interface ZebraResultPayload {
   data: string;
 }
@@ -38,5 +46,5 @@ export enum ZebraEvent {
   ON_DEVICE_CONNECTED = 'onZebraConnected',
   ON_RFID = 'onZebraRFIDReaded',
   ON_BARCODE = 'onZebraBarcodeScanned',
-  ON_LOST_CONNECTION = "onZebraDisconnection",
+  ON_LOST_CONNECTION = 'onZebraDisconnection',
 }

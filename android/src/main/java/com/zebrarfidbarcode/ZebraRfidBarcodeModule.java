@@ -89,6 +89,13 @@ public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implement
   }
 
   @ReactMethod
+  public void disconnectFromDevice() {
+    if (rfidInterface != null) {
+      rfidInterface.disconnect();
+    }
+  }
+
+  @ReactMethod
   public void sendConnectStatus(boolean isConnected) {
     WritableMap params = Arguments.createMap();
     params.putString("data", isConnected ? "Connect successfully" : "Connect failed");
@@ -147,5 +154,16 @@ public class ZebraRfidBarcodeModule extends ReactContextBaseJavaModule implement
 
   @ReactMethod
   public void removeListeners(Integer count) {
+  }
+
+  @ReactMethod
+  public void releaseResources() {
+    if (scannerInterface != null) {
+      scannerInterface.onDestroy();
+    }
+
+    if (rfidInterface != null) {
+      rfidInterface.onDestroy();
+    }
   }
 }

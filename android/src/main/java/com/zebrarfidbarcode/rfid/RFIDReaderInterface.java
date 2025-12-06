@@ -69,6 +69,16 @@ public class RFIDReaderInterface implements RfidEventsListener {
     }
   }
 
+  public void disconnect() {
+    if (reader != null) {
+      try {
+        reader.disconnect();
+      } catch (InvalidUsageException | OperationFailureException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   private void configureReader() {
     if (reader.isConnected()) {
       TriggerInfo triggerInfo = new TriggerInfo();
